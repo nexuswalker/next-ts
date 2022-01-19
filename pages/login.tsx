@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Router from 'next/router'
 
 //import { NextPage } from "next";
 import { login } from "../services/auth-service";
@@ -45,6 +46,7 @@ const Login: React.FC<Props> = (/*{ history }*/) => {
         /*history.push("/profile");
         window.location.reload();*/
         console.log("user authenticated! Going to dashboard now --->");
+        Router.push('/profile-page')
       },
       (error) => {
         const resMessage =

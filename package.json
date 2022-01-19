@@ -14,7 +14,6 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "3.34.8",
-    "use-persisted-state": "0.3.3",
     "yup": "0.32.11"
   },
   "devDependencies": {
