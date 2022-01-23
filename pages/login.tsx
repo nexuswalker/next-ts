@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Router from 'next/router'
+import Router from "next/router";
 
 //import { NextPage } from "next";
-import { login } from "../services/auth-service";
+import { betterLogin /*login*/ } from "../services/auth-service";
+import { useMutation, useQueryClient } from "react-query";
 /*import { RouteComponentProps } from "react-router-dom";
 
 interface RouterProps {
@@ -13,13 +14,58 @@ interface RouterProps {
 
 type Props = RouteComponentProps<RouterProps>;*/
 
+type loginInfo = {
+  username?: string;
+  password?: string;
+  token?: string;
+};
+
 interface Props {
   username: string;
   password: string;
 }
-//const Login: NextPage<Props> = (props) => {
-const Login: React.FC<Props> = (/*{ history }*/) => {
-  const [loading, setLoading] = useState<boolean>(false);
+
+const UsereeForm = (props: { open: any; handleClose: any }) => {
+  const initialValues: {
+    username: string;
+    password: string;
+  } = {
+    username: "",
+    password: ""
+  };
+  const validationSchema = Yup.object().shape({
+    username: Yup.string().required("This field is required!"),
+    password: Yup.string().required("This field is required!")
+  });
+  const { open, handleClose } = props;
+  //const queryClient = useQueryClient();
+  /*const { register, handleSubmit, errors } = useForm<loginInfo>({
+    mode: 'onChange'
+  });*/
+  const { mutate, isLoading } = useMutation(betterLogin, {
+    onSuccess: (data: loginInfo) => {
+      console.log(data);
+      const message = "success";
+      alert(message);
+    },
+    onError: () => {
+      alert("there was an error");
+    }
+    /*onSettled: () => {
+      queryClient.invalidateQueries("create");
+    }*/
+  });
+  const onSubmit = (data: loginInfo) => {
+    /*const employee = {
+      ...data
+    };
+    mutate(employee);*/
+    console.log(data);
+  };
+
+  //const Login: NextPage<Props> = (props) => {
+  //const Login: React.FC<Props> = (/*{ history }*/) => {
+  /*const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
   const initialValues: {
@@ -42,11 +88,11 @@ const Login: React.FC<Props> = (/*{ history }*/) => {
     setLoading(true);
 
     login(username, password).then(
-      () => {
-        /*history.push("/profile");
+      () => {*/
+  /*history.push("/profile");
         window.location.reload();*/
-        console.log("user authenticated! Going to dashboard now --->");
-        Router.push('/profile-page')
+  /*console.log("user authenticated! Going to dashboard now --->");
+        Router.push("/profile-page");
       },
       (error) => {
         const resMessage =
@@ -60,7 +106,7 @@ const Login: React.FC<Props> = (/*{ history }*/) => {
         setMessage(resMessage);
       }
     );
-  };
+  };*/
 
   return (
     <div className="col-md-12">
@@ -73,7 +119,7 @@ const Login: React.FC<Props> = (/*{ history }*/) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleLogin}
+          onSubmit={onSubmit}
         >
           <Form>
             <div className="form-group">
@@ -100,22 +146,11 @@ const Login: React.FC<Props> = (/*{ history }*/) => {
               <button
                 type="submit"
                 className="btn btn-primary btn-block"
-                disabled={loading}
+                //disabled={loading}
               >
-                {loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
                 <span>Login</span>
               </button>
             </div>
-
-            {message && (
-              <div className="form-group">
-                <div className="alert alert-danger" role="alert">
-                  {message}
-                </div>
-              </div>
-            )}
           </Form>
         </Formik>
       </div>
@@ -123,4 +158,4 @@ const Login: React.FC<Props> = (/*{ history }*/) => {
   );
 };
 
-export default Login;
+export default UsereeForm;
